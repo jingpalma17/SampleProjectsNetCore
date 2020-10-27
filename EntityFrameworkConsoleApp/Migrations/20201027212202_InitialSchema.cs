@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace entity_framework_console_app.Migrations
+namespace SampleProjectsNetCore.Migrations
 {
-    public partial class CreateDatabase : Migration
+    public partial class InitialSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,8 +12,8 @@ namespace entity_framework_console_app.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(maxLength: 255, nullable: false),
+                    Description = table.Column<string>(maxLength: 255, nullable: true),
                     Category = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
