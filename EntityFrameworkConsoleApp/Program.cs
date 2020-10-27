@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace entity_framework_console_app
+namespace EntityFrameworkConsoleApp
 {
     class Program
     {
