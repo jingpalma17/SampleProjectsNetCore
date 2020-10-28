@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebApi.Models;
@@ -11,22 +12,17 @@ namespace WebApi.Controllers
     [Route("[controller]")]
     public class ArticleController : ControllerBase
     {
-        private readonly ILogger<ArticleController> _logger;
+        private readonly WebApiAppContext _context;
 
-        public ArticleController(ILogger<ArticleController> logger)
+        public ArticleController(WebApiAppContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         [HttpGet]
-        public IEnumerable<Article> Get()
+        public  ActionResult<IEnumerable<Article>> Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new Article
-            {
-                Title = "sadasdasd"
-            })
-            .ToArray();
+            return _context.Articles;
         }
     }
 }
