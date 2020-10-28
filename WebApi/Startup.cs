@@ -20,7 +20,7 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<WebApiAppContext>(options =>
-                options.UseSqlServer("Server=127.0.0.1,1433;Initial Catalog=SampleProjectsNetCore;User ID=sa;Password=Password123!;MultipleActiveResultSets=true"));
+                options.UseSqlServer("Server=127.0.0.1,1433;Initial Catalog=WebApi;User ID=sa;Password=Password123!;MultipleActiveResultSets=true"));
 
             services.AddControllers();
 

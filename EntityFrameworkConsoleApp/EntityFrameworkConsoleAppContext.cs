@@ -9,7 +9,7 @@ namespace EntityFrameworkConsoleApp
         public DbSet<Article> Articles { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=127.0.0.1,1433;Initial Catalog=SampleProjectsNetCore;User ID=sa;Password=Password123!;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlServer(@"Server=127.0.0.1,1433;Initial Catalog=EntityFrameworkConsoleApp;User ID=sa;Password=Password123!;MultipleActiveResultSets=true");
         }
     }
 }
