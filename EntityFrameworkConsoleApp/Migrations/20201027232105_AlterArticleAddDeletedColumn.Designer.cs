@@ -3,16 +3,19 @@ using EntityFrameworkConsoleApp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace SampleProjectsNetCore.Migrations
 {
     [DbContext(typeof(EntityFrameworkConsoleAppContext))]
-    partial class EntityFrameworkConsoleAppContextModelSnapshot : ModelSnapshot
+    [Migration("20201027232105_AlterArticleAddDeletedColumn")]
+    partial class AlterArticleAddDeletedColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
+
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
@@ -28,8 +31,8 @@ namespace SampleProjectsNetCore.Migrations
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bool");
+                    b.Property<int>("Deleted")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(255)")

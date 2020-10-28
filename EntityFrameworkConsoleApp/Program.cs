@@ -10,6 +10,7 @@ namespace EntityFrameworkConsoleApp
         static void Main(string[] args)
         {
             Console.Clear();
+
             Run().Wait();
             Console.ReadLine();
             Console.WriteLine("finished");

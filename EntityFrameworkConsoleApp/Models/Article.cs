@@ -12,5 +12,6 @@ namespace EntityFrameworkConsoleApp.Models
         [StringLength(255)]
         public string Description { get; set; }
         public string Category { get; set; }
+        public int Deleted { get; set; } = 0;
     }
 }
