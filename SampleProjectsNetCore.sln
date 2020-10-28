@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFrameworkConsoleApp",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{E733B861-C9D7-4A53-BCDC-408D0ABA2393}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{81AD2BCA-A6B0-4257-9CDD-E8A5A079A96C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{E733B861-C9D7-4A53-BCDC-408D0ABA2393}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E733B861-C9D7-4A53-BCDC-408D0ABA2393}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E733B861-C9D7-4A53-BCDC-408D0ABA2393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81AD2BCA-A6B0-4257-9CDD-E8A5A079A96C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81AD2BCA-A6B0-4257-9CDD-E8A5A079A96C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81AD2BCA-A6B0-4257-9CDD-E8A5A079A96C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81AD2BCA-A6B0-4257-9CDD-E8A5A079A96C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
