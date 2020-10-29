@@ -14,6 +14,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
+    <PackageReference Include="IdentityModel" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
