@@ -9,6 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{E2062E03-AD86-4FD0-A008-12A2B72F8F80}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{58DB46BC-EC87-4D30-9A87-A65C10634A31}"
+	ProjectSection(SolutionItems) = preProject
+		SampleProjectsNetCore.sln = SampleProjectsNetCore.sln
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServerAspNetIdentity", "IdentityServerAspNetIdentity\IdentityServerAspNetIdentity.csproj", "{7B5C624C-8126-4EE1-BD64-7336546F7E0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +34,10 @@ Global
 		{E2062E03-AD86-4FD0-A008-12A2B72F8F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2062E03-AD86-4FD0-A008-12A2B72F8F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2062E03-AD86-4FD0-A008-12A2B72F8F80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B5C624C-8126-4EE1-BD64-7336546F7E0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B5C624C-8126-4EE1-BD64-7336546F7E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B5C624C-8126-4EE1-BD64-7336546F7E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B5C624C-8126-4EE1-BD64-7336546F7E0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
