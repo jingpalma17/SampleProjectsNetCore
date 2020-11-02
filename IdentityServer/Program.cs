@@ -2,12 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using IdentityServer.Data.Seed;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using System;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityServer
 {
@@ -32,10 +35,21 @@ namespace IdentityServer
                 .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Code)
                 .CreateLogger();
 
+
+            var host = CreateHostBuilder(args).Build();
+
+            var config = host.Services.GetRequiredService<IConfiguration>();
+            bool seed = config.GetSection("Data").GetValue<bool>("Seed");
+            if (seed)
+            {
+                var connectionString = config.GetConnectionString("DefaultConnection");
+                Users.EnsureSeedData(connectionString);
+            }
+
             try
             {
                 Log.Information("Starting host...");
-                CreateHostBuilder(args).Build().Run();
+                host.Run();
                 return 0;
             }
             catch (Exception ex)

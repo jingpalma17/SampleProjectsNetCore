@@ -5,7 +5,7 @@
 using IdentityServer4.Models;
 using System.Collections.Generic;
 
-namespace IdentityServer
+namespace IdentityServer.Data.Seed
 {
     public static class Config
     {

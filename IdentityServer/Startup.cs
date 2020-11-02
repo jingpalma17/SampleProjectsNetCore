@@ -16,6 +16,7 @@ using System.Reflection;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using System.Linq;
+using IdentityServer.Data.Seed;
 
 namespace IdentityServer
 {
@@ -62,6 +63,7 @@ namespace IdentityServer
                     options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
                         sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
+                // .AddTestUsers(TestUsers.Users)
                 // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
