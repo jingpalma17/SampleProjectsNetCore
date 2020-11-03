@@ -9,8 +9,8 @@ using System.Linq;
 
 namespace WebApi.Controllers
 {
-    [Route("identity")]
     [Authorize]
+    [Route("identity")]
     public class IdentityController : ControllerBase
     {
         [HttpGet]

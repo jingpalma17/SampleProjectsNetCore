@@ -10,34 +10,47 @@ namespace IdentityServer.Data.Seed
 {
     public static class Config
     {
-        public static IEnumerable<IdentityResource> IdentityResources =>
+        public static IEnumerable<IdentityResource> GetIdentityResources =>
             new IdentityResource[]
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
             };
 
-        public static IEnumerable<ApiScope> ApiScopes =>
-            new ApiScope[]
+        public static IEnumerable<ApiResource> GetApis()
+        {
+            return new List<ApiResource>
             {
-                new ApiScope("api1", "My API")
+                new ApiResource("api1"){ Scopes = { "api1" } }
             };
+        }
 
-        public static IEnumerable<Client> Clients =>
+        public static IEnumerable<ApiScope> GetApiScopes()
+        {
+            return new ApiScope[]
+            {
+                new ApiScope(name: "api1", displayName: "full access.")
+            };
+        }
+
+        public static IEnumerable<Client> GetClients =>
             new Client[]
             {
-                // m2m client credentials flow client
                 new Client
                 {
                     ClientId = "client",
                     ClientSecrets = { new Secret("secret".Sha256()) },
 
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    // scopes that client has access to
-                    AllowedScopes = { "api1" }
-                },
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequirePkce = true,
+                    RequireClientSecret = false,
 
-                // interactive ASP.NET Core MVC client
+                    RedirectUris = {"https://localhost:52402/swagger/oauth2-redirect.html"},
+                    AllowedCorsOrigins = {"https://localhost:52402"},
+                    PostLogoutRedirectUris = {"https://localhost:52402/swagger/" },
+                    AllowedScopes = {"api1"}
+                },
+                  
                 new Client
                 {
                     ClientId = "mvc",

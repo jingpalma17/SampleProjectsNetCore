@@ -47,16 +47,18 @@ namespace IdentityServer
                 .AddDefaultTokenProviders();
 
 
-            var builder = services.AddIdentityServer(options =>
-            {
-                options.Events.RaiseErrorEvents = true;
-                options.Events.RaiseInformationEvents = true;
-                options.Events.RaiseFailureEvents = true;
-                options.Events.RaiseSuccessEvents = true;
-
-                // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
-                options.EmitStaticAudienceClaim = true;
-            })
+            var builder = services.AddIdentityServer(
+            //    options =>
+            //{
+            //    options.Events.RaiseErrorEvents = true;
+            //    options.Events.RaiseInformationEvents = true;
+            //    options.Events.RaiseFailureEvents = true;
+            //    options.Events.RaiseSuccessEvents = true;
+            //
+            //    // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
+            //    options.EmitStaticAudienceClaim = true;
+            //}
+            )
                 // this adds the config data from DB (clients, resources, CORS)
                 .AddConfigurationStore(options =>
                 {
@@ -117,9 +119,20 @@ namespace IdentityServer
 
                 var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
                 context.Database.Migrate();
+
+
+                if (!context.ApiScopes.Any())
+                {
+                    foreach (var scope in Config.GetApiScopes())
+                    {
+                        context.ApiScopes.Add(scope.ToEntity());
+                    }
+                    context.SaveChanges();
+                }
+
                 if (!context.Clients.Any())
                 {
-                    foreach (var client in Config.Clients)
+                    foreach (var client in Config.GetClients)
                     {
                         context.Clients.Add(client.ToEntity());
                     }
@@ -128,18 +141,18 @@ namespace IdentityServer
 
                 if (!context.IdentityResources.Any())
                 {
-                    foreach (var resource in Config.IdentityResources)
+                    foreach (var resource in Config.GetIdentityResources)
                     {
                         context.IdentityResources.Add(resource.ToEntity());
                     }
                     context.SaveChanges();
                 }
 
-                if (!context.ApiScopes.Any())
+                if (!context.ApiResources.Any())
                 {
-                    foreach (var resource in Config.ApiScopes)
+                    foreach (var resource in Config.GetApis())
                     {
-                        context.ApiScopes.Add(resource.ToEntity());
+                        context.ApiResources.Add(resource.ToEntity());
                     }
                     context.SaveChanges();
                 }
