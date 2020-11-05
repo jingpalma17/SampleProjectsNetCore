@@ -19,6 +19,8 @@ using System.Linq;
 using IdentityServer.Data.Seed;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Threading.Tasks;
+using IdentityServer4.Configuration;
+using System;
 
 namespace IdentityServer
 {
@@ -35,8 +37,11 @@ namespace IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddMvc()
+                .AddRazorPagesOptions(options =>
+                {
+                    options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
+                });
 
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
