@@ -38,7 +38,7 @@ namespace IdentityServer
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
-            
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -47,18 +47,7 @@ namespace IdentityServer
                 .AddDefaultTokenProviders();
 
 
-            var builder = services.AddIdentityServer(
-            //    options =>
-            //{
-            //    options.Events.RaiseErrorEvents = true;
-            //    options.Events.RaiseInformationEvents = true;
-            //    options.Events.RaiseFailureEvents = true;
-            //    options.Events.RaiseSuccessEvents = true;
-            //
-            //    // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
-            //    options.EmitStaticAudienceClaim = true;
-            //}
-            )
+            var builder = services.AddIdentityServer()
                 // this adds the config data from DB (clients, resources, CORS)
                 .AddConfigurationStore(options =>
                 {
@@ -81,7 +70,7 @@ namespace IdentityServer
                 .AddGoogle(options =>
                 {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                    
+
                     // register your IdentityServer with Google at https://console.developers.google.com
                     // enable the Google+ API
                     // set the redirect URI to https://localhost:5001/signin-google
@@ -92,7 +81,7 @@ namespace IdentityServer
 
         public void Configure(IApplicationBuilder app)
         {
-			// this will do the initial DB population
+            // this will do the initial DB population
             InitializeDatabase(app);
             if (Environment.IsDevelopment())
             {
@@ -109,6 +98,7 @@ namespace IdentityServer
             {
                 endpoints.MapDefaultControllerRoute();
             });
+
         }
 
         private void InitializeDatabase(IApplicationBuilder app)

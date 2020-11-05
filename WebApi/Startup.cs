@@ -10,9 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using NSwag;
+using NSwag.AspNetCore;
+using NSwag.Generation.Processors.Security;
+using WebApi.Models;
+using WebApi.Utils;
 
 namespace WebApi
 {
@@ -32,46 +34,11 @@ namespace WebApi
             services.AddDbContext<WebApiAppContext>(options =>
                 options.UseSqlServer("Server=127.0.0.1,1433;Initial Catalog=WebApi;User ID=sa;Password=Password123!;MultipleActiveResultSets=true"));
 
-            // services.AddControllers();
-
-
-            // services.AddMvcCore(options =>
-            // {
-            //     options.Filters.Add(new AuthorizeFilter());
-            // });
-
-
-            // services.AddMvc();
-
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Protected API", Version = "v1" });
-
-                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        AuthorizationCode = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri("https://localhost:5001/connect/authorize"),
-                            TokenUrl = new Uri("https://localhost:5001/connect/token"),
-                            Scopes = new Dictionary<string, string>
-                            {
-                                {"api1", "Demo API - full access"}
-                            }
-                        }
-                    }
-                });
-
-                options.OperationFilter<AuthorizeCheckOperationFilter1>();
-            });
-
             services.AddAuthentication("Bearer")
                .AddIdentityServerAuthentication(options =>
                {
                    options.ApiName = "api1";
-                   options.Authority = "https://localhost:5001/";
+                   options.Authority = "https://localhost:5001";
                    options.RequireHttpsMetadata = false;
                });
 
@@ -88,6 +55,59 @@ namespace WebApi
 
             services.AddControllers()
                     .AddMvcOptions(options => options.Filters.Add(new AuthorizeFilter()));
+
+
+            services.AddOpenApiDocument(options =>
+            {
+                options.DocumentName = "v1";
+                options.Title = "Protected API";
+                options.Version = "v1";
+
+                options.AddSecurity("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        AuthorizationCode = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = "https://localhost:5001/connect/authorize",
+                            TokenUrl = "https://localhost:5001/connect/token",
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { Scopes.Article.Read, "Article API - Read access" },
+                                { Scopes.Article.Write, "Article API - Write access" },
+                                { Scopes.Identity.Read, "Identity API - Read access" }
+                            },
+                        },
+                        Password = new OpenApiOAuthFlow()
+                        {
+                            AuthorizationUrl = "https://localhost:5001/connect/authorize",
+                            TokenUrl = "https://localhost:5001/connect/token",
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { Scopes.Article.Read, "Article API - Read access" },
+                                { Scopes.Article.Write, "Article API - Write access" },
+                                { Scopes.Identity.Read, "Identity API - Read access" }
+                            },
+                        },
+                        ClientCredentials = new OpenApiOAuthFlow()
+                        {
+                            TokenUrl = "https://localhost:5001/connect/token",
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { Scopes.Article.Read, "Article API - Read access" },
+                                { Scopes.Article.Write, "Article API - Write access" },
+                                { Scopes.Identity.Read, "Identity API - Read access" }
+                            },
+                        },
+                    }
+                });
+
+                options.OperationProcessors.Add(new OperationSecurityScopeProcessor("oauth2"));
+            });
+
+
+            services.AddAuthorization(AuthorizationHelper.BuildPolicies);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,45 +130,23 @@ namespace WebApi
                 endpoints.MapControllers();
             });
 
-            app.UseSwagger();
+            app.UseOpenApi();
 
-            app.UseSwaggerUI(options =>
+            app.UseSwaggerUi3(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                options.RoutePrefix = string.Empty;
-
-                options.OAuthClientId("client");
-                options.OAuthAppName("client");
-                options.OAuthUsePkce();
+                options.OAuth2Client = new OAuth2ClientSettings
+                {
+                    ClientId = "client",
+                    ClientSecret = null,
+                    AppName = "Demo API - Swagger",
+                    UsePkceWithAuthorizationCodeGrant = true
+                };
             });
+
 
             app.UseCors("DefaultCorsPolicy");
 
             app.UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
-        }
-
-        public class AuthorizeCheckOperationFilter1 : IOperationFilter
-        {
-            public void Apply(OpenApiOperation operation, OperationFilterContext context)
-            {
-                var hasAuthorize = context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any() ||
-                                   context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any();
-
-                if (hasAuthorize)
-                {
-                    operation.Responses.Add("401", new OpenApiResponse { Description = "Unauthorized" });
-                    operation.Responses.Add("403", new OpenApiResponse { Description = "Forbidden" });
-
-                    operation.Security = new List<OpenApiSecurityRequirement>
-                {
-                    new OpenApiSecurityRequirement
-                    {
-                        [new OpenApiSecurityScheme {Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "oauth2"}}]
-                            = new[] {"api1"}
-                    }
-                };
-                }
-            }
         }
     }
 }

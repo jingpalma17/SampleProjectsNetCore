@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using IdentityServer.Models;
 using IdentityServer4;
 using IdentityServer4.Models;
 using System.Collections.Generic;
@@ -21,7 +22,14 @@ namespace IdentityServer.Data.Seed
         {
             return new List<ApiResource>
             {
-                new ApiResource("api1"){ Scopes = { "api1" } }
+                new ApiResource("api1"){
+                    Scopes =
+                    {
+                        Scopes.Article.Read,
+                        Scopes.Article.Write,
+                        Scopes.Identity.Read
+                    }
+                }
             };
         }
 
@@ -29,7 +37,9 @@ namespace IdentityServer.Data.Seed
         {
             return new ApiScope[]
             {
-                new ApiScope(name: "api1", displayName: "full access.")
+                new ApiScope(name: Scopes.Article.Read, displayName: "read to article api."),
+                new ApiScope(name: Scopes.Article.Write, displayName: "write to article api."),
+                new ApiScope(name: Scopes.Identity.Read, displayName: "read to identity api.")
             };
         }
 
@@ -48,27 +58,37 @@ namespace IdentityServer.Data.Seed
                     RedirectUris = {"https://localhost:52402/swagger/oauth2-redirect.html"},
                     AllowedCorsOrigins = {"https://localhost:52402"},
                     PostLogoutRedirectUris = {"https://localhost:52402/swagger/" },
-                    AllowedScopes = {"api1"}
+                    AllowedScopes =
+                    {
+                        Scopes.Article.Read,
+                        Scopes.Article.Write,
+                        Scopes.Identity.Read
+                    }
                 },
-                  
                 new Client
                 {
-                    ClientId = "mvc",
+                    ClientId = "client1",
                     ClientSecrets = { new Secret("secret".Sha256()) },
 
-                    AllowedGrantTypes = GrantTypes.Code,
-
-                    // where to redirect to after login
-                    RedirectUris = { "https://localhost:5002/signin-oidc" },
-
-                    // where to redirect to after logout
-                    PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
-
-                    AllowedScopes = new List<string>
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedScopes =
                     {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        Scopes.Article.Read,
+                        Scopes.Article.Write,
+                        Scopes.Identity.Read
+                    }
+                },
+                new Client
+                {
+                    ClientId = "client2",
+                    ClientSecrets = { new Secret("secret".Sha256()) },
+
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    AllowedScopes =
+                    {
+                        Scopes.Article.Read,
+                        Scopes.Article.Write,
+                        Scopes.Identity.Read
                     }
                 },
             };

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
 {
@@ -19,12 +20,14 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = Policies.Article.ReadOnly)]
         public  ActionResult<IEnumerable<Article>> GetArticles()
         {
             return _context.Articles;
         }
  
         [HttpGet("{id}")]
+        [Authorize(Policy = Policies.Article.ReadOnly)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
@@ -42,6 +45,7 @@ namespace WebApi.Controllers
 
 
         [HttpPost]
+        [Authorize(Policy = Policies.Article.Write)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult<Article>> CreateArticle(Article article)
@@ -68,6 +72,7 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Policy = Policies.Article.Write)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> UpdateArticle(int id, Article article)
         {

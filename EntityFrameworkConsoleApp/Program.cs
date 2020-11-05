@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EntityFrameworkConsoleApp.Models;
 using IdentityModel.Client;
-using Newtonsoft.Json.Linq;
 
 namespace EntityFrameworkConsoleApp
 {
@@ -21,7 +19,7 @@ namespace EntityFrameworkConsoleApp
 
         static async Task Run()
         {
-            Console.WriteLine("start");
+            Console.WriteLine("Test identity endpoint");
             var client = new HttpClient();
             var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
             if (disco.IsError)
@@ -30,13 +28,19 @@ namespace EntityFrameworkConsoleApp
                 return;
             }
 
-            var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = disco.TokenEndpoint,
 
-                ClientId = "client",
+                ClientId = "client2",
                 ClientSecret = "secret",
-                Scope = "api1"
+                Scope = string.Join(' ',
+                    "article.read",
+                    "article.write",
+                    "identity.read"
+                ),
+                UserName = "bob",
+                Password = "Pass123$"
             });
 
             if (tokenResponse.IsError)
@@ -45,12 +49,10 @@ namespace EntityFrameworkConsoleApp
                 return;
             }
 
-            Console.WriteLine(tokenResponse.Json);
-
             var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            var response = await apiClient.GetAsync("https://localhost:52402/identity");
+            var response = await apiClient.GetAsync("https://localhost:52402/Identity");
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.StatusCode);
@@ -58,7 +60,8 @@ namespace EntityFrameworkConsoleApp
             else
             {
                 var content = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(JArray.Parse(content));
+                Console.WriteLine(response.StatusCode);
+                Console.WriteLine(content);
             }
 
             Console.ReadLine();
