@@ -32,4 +32,19 @@
   <ItemGroup>
     <Folder Include="Data\Seed\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Areas\Identity\Pages\Account\Manage\_ViewImports.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\_ViewImports.cshtml" />
+    <Content Remove="Areas\Identity\Pages\_ViewImports.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\ConfirmEmailChange.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\AccessDenied.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\_StatusMessage.cshtml" />
+    <Content Remove="Areas\Identity\Pages\_ValidationScriptsPartial.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\ConfirmEmail.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\ExternalLogin.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\ForgotPassword.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\LoginWith2fa.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Error.cshtml" />
+  </ItemGroup>
 </Project>
