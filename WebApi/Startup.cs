@@ -76,7 +76,8 @@ namespace WebApi
                             {
                                 { Scopes.Article.Read, "Article API - Read access" },
                                 { Scopes.Article.Write, "Article API - Write access" },
-                                { Scopes.Identity.Read, "Identity API - Read access" }
+                                { Scopes.Identity.Read, "Identity API - Read access" },
+                                { "profile", "profile" },
                             },
                         },
                         Password = new OpenApiOAuthFlow()
@@ -87,7 +88,8 @@ namespace WebApi
                             {
                                 { Scopes.Article.Read, "Article API - Read access" },
                                 { Scopes.Article.Write, "Article API - Write access" },
-                                { Scopes.Identity.Read, "Identity API - Read access" }
+                                { Scopes.Identity.Read, "Identity API - Read access1" },
+                                { "profile", "profile" },
                             },
                         },
                         ClientCredentials = new OpenApiOAuthFlow()

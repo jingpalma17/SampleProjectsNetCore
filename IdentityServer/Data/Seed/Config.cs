@@ -54,12 +54,14 @@ namespace IdentityServer.Data.Seed
                     AllowedGrantTypes = GrantTypes.Code,
                     RequirePkce = true,
                     RequireClientSecret = false,
+                    RequireConsent = true,
 
                     RedirectUris = {"https://localhost:52402/swagger/oauth2-redirect.html"},
                     AllowedCorsOrigins = {"https://localhost:52402"},
                     PostLogoutRedirectUris = {"https://localhost:52402/swagger/" },
                     AllowedScopes =
                     {
+                        IdentityServerConstants.StandardScopes.Profile,
                         Scopes.Article.Read,
                         Scopes.Article.Write,
                         Scopes.Identity.Read
@@ -69,10 +71,12 @@ namespace IdentityServer.Data.Seed
                 {
                     ClientId = "client1",
                     ClientSecrets = { new Secret("secret".Sha256()) },
+                    RequireConsent = true,
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     AllowedScopes =
                     {
+                        IdentityServerConstants.StandardScopes.Profile,
                         Scopes.Article.Read,
                         Scopes.Article.Write,
                         Scopes.Identity.Read
@@ -82,10 +86,12 @@ namespace IdentityServer.Data.Seed
                 {
                     ClientId = "client2",
                     ClientSecrets = { new Secret("secret".Sha256()) },
+                    RequireConsent = true,
 
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     AllowedScopes =
                     {
+                        IdentityServerConstants.StandardScopes.Profile,
                         Scopes.Article.Read,
                         Scopes.Article.Write,
                         Scopes.Identity.Read

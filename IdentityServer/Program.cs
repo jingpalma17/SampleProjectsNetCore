@@ -43,7 +43,7 @@ namespace IdentityServer
             if (seed)
             {
                 var connectionString = config.GetConnectionString("DefaultConnection");
-                Users.EnsureSeedData(connectionString);
+                SeedData.EnsureSeedData(connectionString);
             }
 
             try

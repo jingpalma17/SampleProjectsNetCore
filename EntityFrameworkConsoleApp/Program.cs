@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using EntityFrameworkConsoleApp.Models;
 using IdentityModel.Client;
+using Newtonsoft.Json;
 
 namespace EntityFrameworkConsoleApp
 {
@@ -19,18 +21,13 @@ namespace EntityFrameworkConsoleApp
 
         static async Task Run()
         {
-            Console.WriteLine("Test identity endpoint");
             var client = new HttpClient();
-            var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
-            if (disco.IsError)
-            {
-                Console.WriteLine(disco.Error);
-                return;
-            }
+            var discoveryDoc = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
 
-            var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
+            Console.WriteLine("Test GET /Identity");
+            var user1TokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
-                Address = disco.TokenEndpoint,
+                Address = discoveryDoc.TokenEndpoint,
 
                 ClientId = "client2",
                 ClientSecret = "secret",
@@ -39,38 +36,56 @@ namespace EntityFrameworkConsoleApp
                     "article.write",
                     "identity.read"
                 ),
-                UserName = "bob",
+                UserName = "user1",
                 Password = "Pass123$"
             });
+            var user1ApiClient = new HttpClient();
+            user1ApiClient.SetBearerToken(user1TokenResponse.AccessToken);
+            var identityResponse = await user1ApiClient.GetAsync("https://localhost:52402/Identity");
+            var identityContent = await identityResponse.Content.ReadAsStringAsync();
+            Console.WriteLine(identityResponse.StatusCode);
+            Console.WriteLine(identityContent);
+            Console.ReadLine();
 
-            if (tokenResponse.IsError)
+            Console.WriteLine("Test POST /Article");
+            var admin1TokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
-                Console.WriteLine(tokenResponse.Error);
-                return;
-            }
+                Address = discoveryDoc.TokenEndpoint,
 
-            var apiClient = new HttpClient();
-            apiClient.SetBearerToken(tokenResponse.AccessToken);
-
-            var response = await apiClient.GetAsync("https://localhost:52402/Identity");
-            if (!response.IsSuccessStatusCode)
+                ClientId = "client2",
+                ClientSecret = "secret",
+                Scope = string.Join(' ',
+                    "article.read",
+                    "article.write",
+                    "identity.read"
+                ),
+                UserName = "admin1",
+                Password = "Pass123$"
+            });
+            var admin1ApiClient = new HttpClient();
+            var newArticle = new Article
             {
-                Console.WriteLine(response.StatusCode);
-            }
-            else
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(response.StatusCode);
-                Console.WriteLine(content);
-            }
-
+                Title = "Title Sample",
+                Description = "Descriptions sample ...",
+                Category = "Internal",
+            };
+            var content = new StringContent(JsonConvert.SerializeObject(newArticle), Encoding.UTF8, "application/json");
+            admin1ApiClient.SetBearerToken(admin1TokenResponse.AccessToken);
+            var articleResponse = await admin1ApiClient.PostAsync("https://localhost:52402/Articles", content);
+            Console.WriteLine(articleResponse.StatusCode);
+            var articleContentJson = await articleResponse.Content.ReadAsStringAsync();
+            newArticle = JsonConvert.DeserializeObject<Article>(articleContentJson);
+            Console.WriteLine($"Article Id:{newArticle.Id}");
+            Console.WriteLine($"Article Title:{newArticle.Title}");
+            Console.WriteLine($"Article Description:{newArticle.Description}");
+            Console.WriteLine($"Article Category:{newArticle.Category}");
             Console.ReadLine();
 
 
             using (var context = new EntityFrameworkConsoleAppContext())
             {
                 // Test create article
-                var newArticle = new Article
+                newArticle = new Article
                 {
                     Title = "Title Sample",
                     Description = "Descriptions sample ...",

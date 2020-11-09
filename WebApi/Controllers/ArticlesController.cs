@@ -45,6 +45,7 @@ namespace WebApi.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [Authorize(Policy = Policies.Article.Write)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesDefaultResponseType]
@@ -69,6 +70,7 @@ namespace WebApi.Controllers
 
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

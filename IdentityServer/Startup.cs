@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Threading.Tasks;
 using IdentityServer4.Configuration;
 using System;
+using IdentityServer4.Services;
 
 namespace IdentityServer
 {
@@ -70,6 +71,8 @@ namespace IdentityServer
                         sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 .AddAspNetIdentity<ApplicationUser>();
+
+            services.AddScoped<IProfileService, ProfileService>();
 
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();

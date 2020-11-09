@@ -17,13 +17,6 @@ namespace WebApi.Controllers
         [Authorize(Policy = Policies.Identity.ReadOnly)]
         public IActionResult Get()
         {
-            // return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
-
-
-            var userClaims = (User.Identity as System.Security.Claims.ClaimsIdentity).Claims;
-            Console.WriteLine(userClaims);
-            var userIdClaim = userClaims.FirstOrDefault(e => e.Type == "UserId");
-
             return Ok(new JsonResult(from c in User.Claims select new { c.Type, c.Value }));
         }
     }
